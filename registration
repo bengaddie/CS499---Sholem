@@ -1,0 +1,37 @@
+ <?php
+
+ if(isset($_POST['submit_btn']))
+ {
+  $username = $_POST['name'];
+  $password = $_POST['pwd'];
+  $text = $username . "," . $password . "\n";
+  $fp = fopen('info.txt', 'a+');
+
+    if(fwrite($fp, $text))  {
+        echo 'saved';
+
+    }
+fclose ($fp);    
+}
+?>
+ <form action = "" method="POST">
+      <h1> Please enter your information and a (short) reason why you want to work on this project</h1>
+        <p>  
+          <label>Email:</label><input type = "text"  name = "name" />
+          <label>Password:</label><input type = "password" name = "pwd" />
+          <br/>
+          
+
+
+          <br/>
+        </p>
+      <input type = "submit" name="submit_btn" id = "submit" value = "submit"/>
+      <input type = "reset"  id = "reset" value = "reset"/>
+    </form>
+    <form action="http://www.html.am/html-codes/textboxes/submitted.cfm">
+    <textarea name="myTextBox" cols="50" rows="5">
+    Enter some text...
+    </textarea>
+    <br />
+    <input type="submit2" />
+    </form>
