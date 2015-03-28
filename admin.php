@@ -5,11 +5,45 @@ File description:
 
 
  -->
-
+<!DOCTYPE HTML>
+<html>
+  <head>
+   <meta charset="utf-8">
+  </head>
+  <body>
+    <h1> Admin page </h1>
+     <br>
+     <h2> Request to Edit </h2>
 
 <?php
 //The following php file is needed for getters/setters of directories, running remote server commands,  
 require "utility.php";
+
+/*Start Handling new contributers request */ 
+/*   handles if there are requests in file.txt, only need to make page look better.
+	0 - there are request to edit. (info.txt is not empty)
+	1 - thare are NOT any request to edit. (info.txt is empty) 
+*/	
+$noRequest = 0; 
+
+$OpenFile = fopen('info.txt','a+');
+if($OpenFile) 
+{
+    while (($line = fgets($OpenFile)) !== false)
+    {
+        // process the line read.
+        
+        echo $line . '\n';
+    }
+    fclose($handle);
+}
+
+else 
+{
+    // error opening the file.
+} 
+
+/*End of Handling new contributer request*/
 
 //Set the new path of the OCR files you want crowdsourced
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ocrFilesPath'])){
@@ -42,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
 } 
 
 ?>
-
+<!-- Moved farther up because html starts earlier now. 
 <!DOCTYPE HTML>
 <html>
   <head>
@@ -51,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
   <body>
     <h1> Admin page </h1>
      <br>
-     
+-->     
      <?php
        echo "<br>Set the location of the OCR files to be crowdsourced:<br>";
      ?>
