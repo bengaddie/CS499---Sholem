@@ -33,7 +33,7 @@ if($OpenFile)
     {
         // process the line read.
         
-        echo $line . '\n';
+        echo $line . '<br/>';
     }
     fclose($handle);
 }
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
      <br>
 -->     
      <?php
-       echo "<br>Set the location of the OCR files to be crowdsourced:<br>";
+       echo "<br/><br/>Set the location of the OCR files to be crowdsourced:<br>";
      ?>
      <form action="admin.php" method="post">
        OCR change1: <input type="text" name="ocrFilesPath"><br>
