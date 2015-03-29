@@ -19,32 +19,6 @@ File description:
 //The following php file is needed for getters/setters of directories, running remote server commands,  
 require "utility.php";
 
-/*Start Handling new contributers request */ 
-/*   handles if there are requests in file.txt, only need to make page look better.
-	0 - there are request to edit. (info.txt is not empty)
-	1 - thare are NOT any request to edit. (info.txt is empty) 
-*/	
-$noRequest = 0; 
-
-$OpenFile = fopen('info.txt','a+');
-if($OpenFile) 
-{
-    while (($line = fgets($OpenFile)) !== false)
-    {
-        // process the line read.
-        
-        echo $line . '<br/>';
-    }
-    fclose($handle);
-}
-
-else 
-{
-    // error opening the file.
-} 
-
-/*End of Handling new contributer request*/
-
 //Set the new path of the OCR files you want crowdsourced
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ocrFilesPath'])){
 
@@ -74,6 +48,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
 	
 	//executeRemoteCommand("svn commit"." ".file_get_contents("constants/ocrFilesPath.txt")."/0016");
 } 
+
+
+
+/*Start Handling new contributers request */ 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit']))
+{
+	echo 'Success!!';
+}
+
+/*   handles if there are requests in file.txt, only need to make page look better.
+	0 - there are request to edit. (info.txt is not empty)
+	1 - thare are NOT any request to edit. (info.txt is empty) 
+*/	
+$noRequest = 0; 
+$count = 0;
+
+$OpenFile = fopen('info.txt','a+');
+if($OpenFile) 
+{
+    while (($line = fgets($OpenFile)) !== false)
+    {
+        // process the line read.
+        echo '<form action="" method="POST">';
+        echo $line . '<br/>';
+        echo '<input type="submit" name="submit'.$count.'" value = submit/>';
+        $count++;
+    }
+    fclose($handle);
+}
+
+else 
+{
+    // error opening the file.
+} 
+
+/*End of Handling new contributer request*/
+
+
 
 ?>
 <!-- Moved farther up because html starts earlier now. 
