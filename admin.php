@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
 
 /*Start Handling new contributers request */ 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit']))
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']))
 {
 	echo 'Success!!';
 }
@@ -65,15 +65,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit']))
 $noRequest = 0; 
 $count = 0;
 
+// just need the email, split string to get the email
+
 $OpenFile = fopen('info.txt','a+');
 if($OpenFile) 
 {
     while (($line = fgets($OpenFile)) !== false)
     {
+    	
         // process the line read.
         echo '<form action="" method="POST">';
-        echo $line . '<br/>';
-        echo '<input type="submit" name="submit'.$count.'" value = submit> <br><br>';
+        echo '<label for='.$email.'>'.$line.'</label>';
+        echo'<input="checkbox" name="email" id='.$email.'value='.$email.'><br><br>';
+        //echo $line . '<br/>';
+        echo '<input type="submit" value =Accept> <br><br>';
         $count++;
     }
     fclose($handle);
