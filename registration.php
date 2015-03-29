@@ -4,7 +4,7 @@
  {
   $username = $_POST['email'];
   $reason = $_POST['reason'];
-  $text = $username . "," . $reason . "\n";
+  $text = $username . ": " . $reason . "\n";
   $fp = fopen('info.txt', 'a+');
 
     if(fwrite($fp, $text))  {
