@@ -73,7 +73,7 @@ if($OpenFile)
         // process the line read.
         echo '<form action="" method="POST">';
         echo $line . '<br/>';
-        echo '<input type="submit" name="submit'.$count.'" value = submit/>';
+        echo '<input type="submit" name="submit'.$count.'" value = submit> <br><br>';
         $count++;
     }
     fclose($handle);
