@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']))
 {
-	echo 'Success!!';
+	echo $_POST['email'];
 }
 
 /*   handles if there are requests in file.txt, only need to make page look better.
@@ -70,18 +70,19 @@ $count = 0;
 $OpenFile = fopen('info.txt','a+');
 if($OpenFile) 
 {
-    while (($line = fgets($OpenFile)) !== false)
-    {
-    	
-        // process the line read.
-        echo '<form action="" method="POST">';
-        echo '<label for='.$email.'>'.$line.'</label>';
-        echo'<input="checkbox" name="email" id='.$email.'value='.$email.'><br><br>';
-        //echo $line . '<br/>';
-        echo '<input type="submit" value =Accept> <br><br>';
-        $count++;
-    }
-    fclose($handle);
+	echo '<form action="" method="POST">';
+	while (($line = fgets($OpenFile)) !== false)
+        { 
+        	// process the line read.
+        	echo $line . '<br>';
+        	echo '<input type="submit" name="accept" value="Accept"> <br><br>';
+		echo '<input type="submit" name="deny" value="Deny"><br>'
+		echo '<input type="hidden" name="email" value="'$email'">';
+		// use hidden values. 
+		//$count++;
+    	}
+     	echo '</form>';
+    	fclose($handle);
 }
 
 else 
