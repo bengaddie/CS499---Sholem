@@ -76,7 +76,7 @@ if($OpenFile)
         	// process the line read.
         	echo $line . '<br>';
         	echo '<input type="submit" name="accept" value="Accept"> <br><br>';
-		echo '<input type="submit" name="deny" value="Deny"><br>'
+		echo '<input type="submit" name="deny" value="Deny"><br>';
 		echo '<input type="hidden" name="email" value="'$email'">';
 		// use hidden values. 
 		//$count++;
