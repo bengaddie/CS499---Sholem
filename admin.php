@@ -53,9 +53,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
 
 /*Start Handling new contributers request */ 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']))
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accept']))
 {
-	echo $_POST['email'];
+	
+	echo $_POST['email'] . 'Is accepted <br>';
+	/* 
+	  open new file called emails.txt
+	  write new email to the end of the file
+	  close the file
+	  open info.txt 
+	  remove line that starts with the email
+	  read in entire file.
+	  then recopy the file back so that there are no empty lines in file. 
+	  close file
+	*/
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
+{
+	echo $_POST['email'] . 'Is Denied <br>'
+	/*
+	  open info.txt 
+	  remove line that starts with the email
+	  read in entire file.
+	  then recopy the file back so that there are no empty lines in file. 
+	  close file
+	*/
 }
 
 /*   handles if there are requests in file.txt, only need to make page look better.
@@ -65,18 +88,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']))
 $noRequest = 0; 
 $count = 0;
 
-// just need the email, split string to get the email
-
+// opens file that holds the emails and reasons why the should be allowed to edit
 $OpenFile = fopen('info.txt','a+');
+// if the file opens then you procede there just to keep the page from crashing in the off chance the file is misisng. 
 if($OpenFile) 
 {
 	echo '<form action="" method="POST">';
+	// read in the file line by line.  
 	while (($line = fgets($OpenFile)) !== false)
         { 
-            // process the line read.
+            // split the line into the email and the reason why.
             list($email, $stuff) = explode(":", $line);
         	echo $line . '<br>';
-        	echo '<input type="submit" name="accept" value="Accept"> <br><br>';
+        	echo '<input type="submit" name="accept" value="Accept">    ';
 		    echo '<input type="submit" name="deny" value="Deny"><br>';
 		    echo '<input type="hidden" name="email" value="'.$email.'">';
 		    // use hidden values. 
