@@ -93,10 +93,11 @@ $OpenFile = fopen('info.txt','a+');
 // if the file opens then you procede there just to keep the page from crashing in the off chance the file is misisng. 
 if($OpenFile) 
 {
-	echo '<form action="" method="POST">';
+	
 	// read in the file line by line.  
 	while (($line = fgets($OpenFile)) !== false)
         { 
+            echo '<form action="" method="POST">';
             // split the line into the email and the reason why.
             list($email, $stuff) = explode(":", $line);
         	echo $line . '<br>';
@@ -105,8 +106,9 @@ if($OpenFile)
 		    echo '<input type="hidden" name="email" value="'.$email.'">';
 		    // use hidden values. 
 		    //$count++;
+		    echo '</form>';
     	}
-     	echo '</form>';
+     	
     	fclose($handle);
 }
 
