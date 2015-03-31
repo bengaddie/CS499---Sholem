@@ -17,7 +17,7 @@ File description:
 
 <?php
 //The following php file is needed for getters/setters of directories, running remote server commands,  
-require "utility.php";
+//require "utility.php";
 
 //Set the new path of the OCR files you want crowdsourced
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ocrFilesPath'])){
@@ -72,13 +72,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accept']))
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
 {
 	echo $_POST['email'] . 'Is Denied <br>';
-	/*
-	  open info.txt 
-	  remove line that starts with the email
-	  read in entire file.
-	  then recopy the file back so that there are no empty lines in file. 
-	  close file
-	*/
+	$blank = "";
+	//  open info.txt
+	$file = fopen('info.txt', 'a+');
+	// read in contents of file
+	$content = fread($file,filesize('info.txt'));
+	if($file)
+	{
+	    $content = str_replace($_POST['line'], "", $content);
+	    $file = fopen('info.txt',"w");
+	    fwrite($file, $content);
+	    fclose($file);
+	}
+	// remove line that starts with the email
+	// read in entire file.
+	// then recopy the file back so that there are no empty lines in file. 
+	// close file
+	
+	
+	
 }
 
 /*   handles if there are requests in file.txt, only need to make page look better.
@@ -104,6 +116,7 @@ if($OpenFile)
         	echo '<input type="submit" name="accept" value="Accept">    ';
 		    echo '<input type="submit" name="deny" value="Deny"><br>';
 		    echo '<input type="hidden" name="email" value="'.$email.'">';
+		    echo '<input type="hidden" name="line" value="'.$line.'">';
 		    // use hidden values. 
 		    //$count++;
 		    echo '</form>';
@@ -163,3 +176,4 @@ else
      </form>
    </body>
  </html>
+
