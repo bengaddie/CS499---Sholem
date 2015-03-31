@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accept']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
 {
-	echo $_POST['email'] . 'Is Denied <br>'
+	echo $_POST['email'] . 'Is Denied <br>';
 	/*
 	  open info.txt 
 	  remove line that starts with the email
