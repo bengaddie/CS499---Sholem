@@ -73,13 +73,14 @@ if($OpenFile)
 	echo '<form action="" method="POST">';
 	while (($line = fgets($OpenFile)) !== false)
         { 
-        	// process the line read.
+            // process the line read.
+            list($email, $stuff) = explode(":", $line);
         	echo $line . '<br>';
         	echo '<input type="submit" name="accept" value="Accept"> <br><br>';
-		echo '<input type="submit" name="deny" value="Deny"><br>';
-		echo '<input type="hidden" name="email" value="'$email'">';
-		// use hidden values. 
-		//$count++;
+		    echo '<input type="submit" name="deny" value="Deny"><br>';
+		    echo '<input type="hidden" name="email" value="'.$email.'">';
+		    // use hidden values. 
+		    //$count++;
     	}
      	echo '</form>';
     	fclose($handle);
