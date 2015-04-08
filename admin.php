@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commitOcrChange'])){
 	//executeRemoteCommand("svn commit"." ".file_get_contents("constants/ocrFilesPath.txt")."/0016");
 
 	//while loop to keep generate the list of changes whith a check box 
-	
+
 
 	$command = (string)"cd ".file_get_contents("constants/ocrFilesPath.txt").";svn commit -m 'myVictoryMsg'";
 	echo $command;
@@ -51,14 +51,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
 
 
 
-/*Start Handling new contributers request */ 
+/*****************************
+    Start Handling new contributers request */
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accept']))
 {
-	
+
 	echo $_POST['email'] . 'Is accepted <br>';
 	/* 
 	  open new file called emails.txt
+	$file = fopen('email.txt',a+);
 	  write new email to the end of the file
 	  close the file
 	  open info.txt 
@@ -71,53 +73,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accept']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
 {
-	echo $_POST['email'] . 'Is Denied <br>';
-	/*
-	  open info.txt 
-	  remove line that starts with the email
-	  read in entire file.
-	  then recopy the file back so that there are no empty lines in file. 
-	  close file
-	*/
+
+  $email = $_POST['email'];
+  // XML attempt
+
+  //$xml = simplexml_load_string("info.xml");
+  $doc = new DOMDocument;;
+  $doc->load("info.xml");
+
+  $xpath = new DOMXPath($doc);
+
+  foreach($xpath->query("/info/user[Email='".$email."']") as $user)
+  {
+
+    $user->parentNode->removeChild($user);
+
+  }
+  // Makes the outout  look neat so the xml file stays properly formatted.
+  $doc->formatOutput = true;
+  $doc->save('info.xml');
+
 }
+
+
 
 /*   handles if there are requests in file.txt, only need to make page look better.
 	0 - there are request to edit. (info.txt is not empty)
 	1 - thare are NOT any request to edit. (info.txt is empty) 
-*/	
-$noRequest = 0; 
+*/
+$noRequest = 0;
 $count = 0;
 
 // opens file that holds the emails and reasons why the should be allowed to edit
-$OpenFile = fopen('info.txt','a+');
+$xml = simplexml_load_file("info.xml");
 // if the file opens then you procede there just to keep the page from crashing in the off chance the file is misisng. 
-if($OpenFile) 
-{
-	
-	// read in the file line by line.  
-	while (($line = fgets($OpenFile)) !== false)
-        { 
+
+
+        foreach($xml->children() as $user)
+        {
             echo '<form action="" method="POST">';
-            // split the line into the email and the reason why.
-            list($email, $stuff) = explode(":", $line);
-        	echo $line . '<br>';
+        	echo $user->Email . ": ";
+		echo $user->Reason; 
+                echo '<br>';
         	echo '<input type="submit" name="accept" value="Accept">    ';
-		    echo '<input type="submit" name="deny" value="Deny"><br>';
-		    echo '<input type="hidden" name="email" value="'.$email.'">';
-		    // use hidden values. 
-		    //$count++;
-		    echo '</form>';
-    	}
-     	
-    	fclose($handle);
-}
+	        echo '<input type="submit" name="deny" value="Deny"><br>';
+		echo '<input type="hidden" name="email" value="'.$user->Email.'">';
+		echo '<input type="hidden" name="line" value="'.$user->Reason.'">';
+		echo '</form>';
+            }
 
-else 
-{
-    // error opening the file.
-} 
 
-/*End of Handling new contributer request*/
+/*   End of Handling new contributer request     */
 
 
 
@@ -163,3 +169,4 @@ else
      </form>
    </body>
  </html>
+
