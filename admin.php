@@ -17,7 +17,7 @@ File description:
 
 <?php
 //The following php file is needed for getters/setters of directories, running remote server commands,  
-require "utility.php";
+//require "utility.php";
 
 //Set the new path of the OCR files you want crowdsourced
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ocrFilesPath'])){
@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accept']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
 {
+<<<<<<< HEAD
 
   $email = $_POST['email'];
   // XML attempt
@@ -93,6 +94,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
   $doc->formatOutput = true;
   $doc->save('info.xml');
 
+=======
+	echo $_POST['email'] . 'Is Denied <br>';
+	$blank = "";
+	//  open info.txt
+	$file = fopen('info.txt', 'a+');
+	// read in contents of file
+	$content = fread($file,filesize('info.txt'));
+	if($file)
+	{
+	    $content = str_replace($_POST['line'], "", $content);
+	    $file = fopen('info.txt',"w");
+	    fwrite($file, $content);
+	    fclose($file);
+	}
+	// remove line that starts with the email
+	// read in entire file.
+	// then recopy the file back so that there are no empty lines in file. 
+	// close file
+	
+	
+	
+>>>>>>> origin/My-Admin
 }
 
 
@@ -116,11 +139,24 @@ $xml = simplexml_load_file("info.xml");
 		echo $user->Reason; 
                 echo '<br>';
         	echo '<input type="submit" name="accept" value="Accept">    ';
+<<<<<<< HEAD
 	        echo '<input type="submit" name="deny" value="Deny"><br>';
 		echo '<input type="hidden" name="email" value="'.$user->Email.'">';
 		echo '<input type="hidden" name="line" value="'.$user->Reason.'">';
 		echo '</form>';
             }
+=======
+		    echo '<input type="submit" name="deny" value="Deny"><br>';
+		    echo '<input type="hidden" name="email" value="'.$email.'">';
+		    echo '<input type="hidden" name="line" value="'.$line.'">';
+		    // use hidden values. 
+		    //$count++;
+		    echo '</form>';
+    	}
+     	
+    	fclose($handle);
+}
+>>>>>>> origin/My-Admin
 
 
 /*   End of Handling new contributer request     */
