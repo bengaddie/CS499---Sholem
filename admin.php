@@ -17,7 +17,7 @@ File description:
 
 <?php
 //The following php file is needed for getters/setters of directories, running remote server commands,  
-//require "utility.php";
+require "utility.php";
 
 //Set the new path of the OCR files you want crowdsourced
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ocrFilesPath'])){
@@ -57,30 +57,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['denyOcrChange'])){
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accept']))
 {
 
-	echo $_POST['email'] . 'Is accepted <br>';
-	/* 
-	  open new file called emails.txt
-	$file = fopen('email.txt',a+);
-	  write new email to the end of the file
-	  close the file
-	  open info.txt 
-	  remove line that starts with the email
-	  read in entire file.
-	  then recopy the file back so that there are no empty lines in file. 
-	  close file
-	*/
+	$email = $_POST['email'];
+        //echo $email;
+        //echo '<br>';
+        $sFile = 'applicant.xml';
+        $dFile = 'user.xml';    
+        
+        $source = simplexml_load_file($sFile);
+        $destination = simplexml_load_file($dFile);
+      
+        foreach ($source->xpath("/info/user[Email='".$email."']") as $user2) 
+        {
+            $newUser = $destination->addChild('user');
+            $newUser->addChild('Email', $user2->Email);
+            $newUser->addChild('First', $user2->First);
+            $newUser->addChild('Last', $user2->Last);
+            $newUser->addChild('Password', $user2->Password);
+            $newUser->addChild('Reason', $user2->Reason);
+            $newUser->addChild('Permission', $user2->Permission);
+        }
+      
+        $destination->saveXML($dFile);
+        
+        $doc = new DOMDocument;
+        $doc->load("applicant.xml");
+        $xpath2 = new DOMXPath($doc);
+
+       foreach($xpath2->query("/info/user[Email='".$email."']") as $user3)
+       {
+
+        $user3->parentNode->removeChild($user3);
+       }
+       // Makes the outout  look neat so the xml file stays properly formatted.
+       
+       $doc->save('applicant.xml');
+//        
+//        /* 
+//         * Open applicant.xml
+//         * Use email from POST  to find coresponding user and copy over info to 
+//         * -- user.xml 
+//         * 
+//         * Then open applicant.xml and remove the 
+//         */
+        
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
 {
-<<<<<<< HEAD
 
   $email = $_POST['email'];
   // XML attempt
 
   //$xml = simplexml_load_string("info.xml");
-  $doc = new DOMDocument;;
-  $doc->load("info.xml");
+  $doc = new DOMDocument;
+  $doc->load("applicant.xml");
 
   $xpath = new DOMXPath($doc);
 
@@ -92,30 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
   }
   // Makes the outout  look neat so the xml file stays properly formatted.
   $doc->formatOutput = true;
-  $doc->save('info.xml');
+  $doc->save('applicant.xml');
 
-=======
-	echo $_POST['email'] . 'Is Denied <br>';
-	$blank = "";
-	//  open info.txt
-	$file = fopen('info.txt', 'a+');
-	// read in contents of file
-	$content = fread($file,filesize('info.txt'));
-	if($file)
-	{
-	    $content = str_replace($_POST['line'], "", $content);
-	    $file = fopen('info.txt',"w");
-	    fwrite($file, $content);
-	    fclose($file);
-	}
-	// remove line that starts with the email
-	// read in entire file.
-	// then recopy the file back so that there are no empty lines in file. 
-	// close file
-	
-	
-	
->>>>>>> origin/My-Admin
 }
 
 
@@ -124,11 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deny']))
 	0 - there are request to edit. (info.txt is not empty)
 	1 - thare are NOT any request to edit. (info.txt is empty) 
 */
-$noRequest = 0;
-$count = 0;
-
+$file = "applicant.xml";
 // opens file that holds the emails and reasons why the should be allowed to edit
-$xml = simplexml_load_file("info.xml");
+$xml = simplexml_load_file($file);
 // if the file opens then you procede there just to keep the page from crashing in the off chance the file is misisng. 
 
 
@@ -139,24 +145,11 @@ $xml = simplexml_load_file("info.xml");
 		echo $user->Reason; 
                 echo '<br>';
         	echo '<input type="submit" name="accept" value="Accept">    ';
-<<<<<<< HEAD
 	        echo '<input type="submit" name="deny" value="Deny"><br>';
 		echo '<input type="hidden" name="email" value="'.$user->Email.'">';
 		echo '<input type="hidden" name="line" value="'.$user->Reason.'">';
 		echo '</form>';
             }
-=======
-		    echo '<input type="submit" name="deny" value="Deny"><br>';
-		    echo '<input type="hidden" name="email" value="'.$email.'">';
-		    echo '<input type="hidden" name="line" value="'.$line.'">';
-		    // use hidden values. 
-		    //$count++;
-		    echo '</form>';
-    	}
-     	
-    	fclose($handle);
-}
->>>>>>> origin/My-Admin
 
 
 /*   End of Handling new contributer request     */
