@@ -18,7 +18,7 @@ $ENV{'PATH'} = '/bin:/usr/bin:/usr/local/bin:/usr/local/gnu/bin'; # for security
 
 # constants
 
-my $searchResultsFor = 'Search results for: '; # Yiddish: "Search results for:"
+my $searchResultsFor = 'זוכן רעזולטאַטן פֿאַר: '; # Yiddish: "Search results for:"
 my $resultsPerPage = 10; # Number of results we will show per page
 
 my $dataFile = "/u/peg-d4/TMP/raphael/sholem-aleykhem-ale/output.uyid";
@@ -30,20 +30,12 @@ my $dataFile = "/u/peg-d4/TMP/raphael/sholem-aleykhem-ale/output.uyid";
 
 # Calls searchSholem.cgi and sends text entered in the input text field via the post method
 my $form = "
-	<div class='container bg-primary text-center col-md-12'>
-            <div class='row top'>
-		<div class='col-md-offset-3 col-md-6'>
-		    <a href='searchSholem.cgi'><h1>אַלע װערק פֿון שלום עליכם</h1></a>
-		</div>
-		<div class='col-md-offset-1 col-md-1'>
-		    <h4><a href='sholem_login.php'>Login</a></h4>
-		</div>
-            </div>
-        <form
+	<div class='container text-center col-md-offset-3 col-md-6'><form
 	action='" . $0 . "'
 	method='post' enctype='multipart/form-data' autocomplete='off'>
+		<h1>אַלע װערק פֿון שלום עליכם</h1>
 		<input type='text' name='keys' size='40'
-			placeholder='search'
+			placeholder='זוכן דאָ'
 			id='entry'
 			onmouseover='getElementById('entry').focus()'
 			/>
@@ -93,13 +85,9 @@ my %books = (
 my $css = '
 	pre {
 		font-family: "Times New Roman", Times, serif;
-		font-size: 125%;
-		font-weight: 600;
-		display: block;
-		border: none;
-		background-color: #f8f8f8;	
+		font-size: 100%; 
+		font-weight: bold;
 	}
-
 	h1 {
 		font-size: 350%;
 		text-align: center;
@@ -114,24 +102,13 @@ my $css = '
 	}
 
 	.container {
+		background: #3e9cbf;
+		color: #fff;
 		padding-bottom: 10px;
 	}
 
 	.edit-view {
 		display: inline;
-	}
-
-	.top a {
-		text-decoration: none;
-		color: #fff;
-	}
-
-	.top a:hover {
-		color: #c6c9c3;
-	}
-
-	.login {
-		color: #ffffff;
 	}
 	
 	input#edit-button {
@@ -213,7 +190,7 @@ sub oneWord {
 	my $pattern = makePattern($keyword);
 	my ($book, $page);
 	my $numResultPages;
-	print "<div class='row search-results col-md-offset-4 col-md-4'>"; # creates div for returning search results;
+	print "<div class='row search-results col-md-offset-3 col-md-6'>"; # creates div for returning search results;
 	for my $entry (split //, $text) {
 		if ($entry =~ s/tmp\/nybc(\d+).*\/(pg|nybc\d+_orig)_(\d+)//) {
 			($book, $page) = ($1, $3);
@@ -235,20 +212,16 @@ sub oneWord {
 				<a target='_blank'
                         href='https://archive.org/stream/nybc$book#page/n$page/mode/1up'>$books{$book},
                         pg. $page<\/a>
-				<button type='submit' class='btn btn-primary btn-xs'>edit</button>
+				<input id='edit-button' type='submit' value='ויסרעדאַגירן'>
 			</form>
-			<p><pre>$entry</pre></p></div><br/>\n"; # print an entry that is found
+			<p>$entry</p></div><br/>\n"; # print an entry that is found
 			$hits += 1;
 		} # a hit
 		
-   		if ($hits >= $resultsPerPage) {
+		if ($hits >= $resultsPerPage) {
 			return; # stop printing results after the 10th result is displayed
 		}
 	} # one side
-	if ($hits == 0) {
-            print "<h2>No results found</h2>";
-        }
-
 	print "</div>"; # close div
 	
 } # oneWord

@@ -1,0 +1,87 @@
+
+<!--
+File description:
+
+
+
+
+ -->
+
+
+<?php
+//The following php file is needed for getters/setters of directories, running remote server commands,  
+require_once "utility.php";
+require_once "globals.php";
+?>
+
+
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<h1> Admin page </h1>
+<br>
+<?php
+echo "<br><h2>Recent User edits:</h2> <br>";
+	//echo $locationOfLogFiles."<br>"; 
+    $logs = parseLogFiles();
+    //echo "<br> Number of logs files: ".sizeof(($logs))."<br>";
+
+	for ($i = 1 ; $i < sizeof($logs); $i++){
+	$userChange = "/mounts/u-zon-d2/ugrad/mtlank2/HTML/499/logs/".$logs[$i][0]."~".$logs[$i][1]."~".$logs[$i][2]."~".$logs[$i][3]."~diff";  
+	//echo $userChange."<br>";
+	
+	if (!($i % 2 == 0)){
+    echo $logs[$i][0]." changed book# ".$logs[$i][1]." , page# ".$logs[$i][2]." on ".date("l jS \of F Y h:i:s A", $logs[$i][3])."<br>"; 
+	echo 
+		"
+		<textarea rows='25' cols='75' name='editedText'>
+		".
+		file_get_contents($userChange)  
+		.
+		"
+		</textarea>
+
+		<form action='validate.php' method='post'>
+		  <input type='hidden' name='time' value='".time()."' />
+		  <input type='hidden' name='user' value='".$logs[$i][0]."'>
+		  <input type='hidden' name='book' value='".$logs[$i][1]."'>
+		  <input type='hidden' name='page' value='".$logs[$i][2]."'>
+		  <input type='hidden' name='time' value='".$logs[$i][3]."'>
+		  Press Accept to allow change.  Press Deny to revert the change.
+		  <button name='commitOcrChange' type='submit' value='commitOcrChange'>Accept</button>
+		  <button name='denyOcrChange' type='submit' value='denyOcrChange'>Deny</button>
+		</form>
+		<br><br><br><br><br><br>
+		";
+	}
+}
+
+
+
+?>
+
+
+
+
+
+
+
+
+
+<?php
+//Admin changes path of Sholem OCR Files.
+echo "<br><h2>New OCR file path</h2><h4>Set the Multilab absolute path location of the OCR files to be crowdsourced.  NOTE: The path should be set up to parent directory of the books you wish to crowdsource.  
+Example: path/to/ocrFilesDirectory/book/page *IS NOT* the path you should set.  Instead, using the same example, the correct path to set would be: path/to/ocrFilesDirectory </h4>";
+?>
+<form action="validate.php" method="post">
+Absolute Path (i.e use pwd command): <input type="text" name="ocrFilesPath"><br>
+<input type="submit">
+</form>
+
+</body>
+</html>

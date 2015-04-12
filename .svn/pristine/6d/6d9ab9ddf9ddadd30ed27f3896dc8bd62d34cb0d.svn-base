@@ -18,32 +18,15 @@ $ENV{'PATH'} = '/bin:/usr/bin:/usr/local/bin:/usr/local/gnu/bin'; # for security
 
 # constants
 
-my $searchResultsFor = 'Search results for: '; # Yiddish: "Search results for:"
-my $resultsPerPage = 10; # Number of results we will show per page
+my $searchResultsFor = 'זוכן רעזולטאַטן פֿאַר :';
 
+my $hitLimit = 10; # number of hits we are willing to print
 my $dataFile = "/u/peg-d4/TMP/raphael/sholem-aleykhem-ale/output.uyid";
-
-# This form will display:
-#	- All Works of Sholem Aleichem
-#	- Input search bar
-#	- Special Yiddish characters
-
-# Calls searchSholem.cgi and sends text entered in the input text field via the post method
 my $form = "
-	<div class='container bg-primary text-center col-md-12'>
-            <div class='row top'>
-		<div class='col-md-offset-3 col-md-6'>
-		    <a href='searchSholem.cgi'><h1>אַלע װערק פֿון שלום עליכם</h1></a>
-		</div>
-		<div class='col-md-offset-1 col-md-1'>
-		    <h4><a href='sholem_login.php'>Login</a></h4>
-		</div>
-            </div>
-        <form
+	<div class='container text-center'><form
 	action='" . $0 . "'
-	method='post' enctype='multipart/form-data' autocomplete='off'>
+	method='post' enctype='multipart/form-data'>
 		<input type='text' name='keys' size='40'
-			placeholder='search'
 			id='entry'
 			onmouseover='getElementById('entry').focus()'
 			/>
@@ -54,7 +37,6 @@ my $form = "
 		</script>
 	</form></div>
 	";
-
 my $javaScript = '
 	function showLetter(letter) {
 		document.getElementById("entry").value += letter;
@@ -93,45 +75,19 @@ my %books = (
 my $css = '
 	pre {
 		font-family: "Times New Roman", Times, serif;
-		font-size: 125%;
-		font-weight: 600;
-		display: block;
-		border: none;
-		background-color: #f8f8f8;	
+		font-size: 100%; 
+		font-weight: bold;
 	}
-
 	h1 {
-		font-size: 350%;
+		font-size: 300%;
 		text-align: center;
 	}
 
         h2 {
 		text-align: center;
 	}
-
-	a {
-		text-decoration: underline;
-	}
-
-	.container {
-		padding-bottom: 10px;
-	}
-
 	.edit-view {
 		display: inline;
-	}
-
-	.top a {
-		text-decoration: none;
-		color: #fff;
-	}
-
-	.top a:hover {
-		color: #c6c9c3;
-	}
-
-	.login {
-		color: #ffffff;
 	}
 	
 	input#edit-button {
@@ -140,41 +96,15 @@ my $css = '
 		border-radius: 3em;
 		border: none;
 	}
-
-	.search-results {
-		height: 700px;
-		overflow: scroll;
-	}
-
-	input#entry {
-		border-radius: 3em;
-		border: none; //1px solid;
-		width: 350px;
-		height: 30px;
-		padding: 0 15px 0 15px;
-	}
-
-	input[type="text"] {
-		font-size: 18px;
-		color: #000;
-	}
-
-	input:focus,
-	select.focus,
-	textarea:focus,
-	button:focus {
-		outline: none;
-	}
 ';
 
-my $blue = '<span style="color:#3e9cbf">';
+my $blue = '<span style="color:blue">';
 my $green = '<span style="background-color:#AAFFAA">';
 my $yellow = '<span style="background-color:yellow">';
 my $pink = '<span style="background-color:pink">';
 my $red = '<span style="color:red">';
 
-# If a word is found, it is displayed with this span style
-my $foundWord = '<span style="color:#3e9cbf;font-weight:bold;font-size:110%;text-decoration:underline;">'; #comment
+my $foundWord = '<span style="color:blue;font-weight:bold;">'; #comment
 
 # variables
 my $lineLength;
@@ -206,14 +136,10 @@ sub oneWord {
 	my ($keyword) = @_;
 	# print STDERR "keyword is $keyword\n";
 	readText() unless defined($text);
-	print "<div class='row col-md-offset-3 col-md-6'>";
 	print h2($searchResultsFor . $keyword), br();
-	print "</div>";
 	my $hits = 0;
 	my $pattern = makePattern($keyword);
 	my ($book, $page);
-	my $numResultPages;
-	print "<div class='row search-results col-md-offset-4 col-md-4'>"; # creates div for returning search results;
 	for my $entry (split //, $text) {
 		if ($entry =~ s/tmp\/nybc(\d+).*\/(pg|nybc\d+_orig)_(\d+)//) {
 			($book, $page) = ($1, $3);
@@ -226,7 +152,7 @@ sub oneWord {
 			$entry =~ s/>/\&gt;/g;
 			$entry =~ s/\b($pattern)\b/$yellow$1<\/span>/g or
 				$entry =~ s/($pattern)/$foundWord$1<\/span>/g;
-			print "<div class='row'>
+			print "<div class='row col-md-offset-3 col-md-6'>
 			<form 
 				action='user.php'
 				method='post' enctype='multipart/form-data'>
@@ -235,22 +161,15 @@ sub oneWord {
 				<a target='_blank'
                         href='https://archive.org/stream/nybc$book#page/n$page/mode/1up'>$books{$book},
                         pg. $page<\/a>
-				<button type='submit' class='btn btn-primary btn-xs'>edit</button>
+				<input id='edit-button' type='submit' value='רעדאַגיר די זײַט'>
 			</form>
-			<p><pre>$entry</pre></p></div><br/>\n"; # print an entry that is found
+			<p>$entry</p></div><br/>\n";
 			$hits += 1;
 		} # a hit
-		
-   		if ($hits >= $resultsPerPage) {
-			return; # stop printing results after the 10th result is displayed
+		if ($hits >= $hitLimit) {
+			return;
 		}
 	} # one side
-	if ($hits == 0) {
-            print "<h2>No results found</h2>";
-        }
-
-	print "</div>"; # close div
-	
 } # oneWord
 
 sub doSearch {
@@ -291,8 +210,8 @@ sub init {
 			-script=>$analytics . $javaScript,
 			-style=>{-code=>$css},
 		) .
-	
-		$form; # display first form
+		h1("אַלע װערק פֿון שלום עליכם") .
+		$form;
 } # init
 
 sub finalize {

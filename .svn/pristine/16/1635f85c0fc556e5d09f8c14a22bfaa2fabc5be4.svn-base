@@ -93,13 +93,9 @@ my %books = (
 my $css = '
 	pre {
 		font-family: "Times New Roman", Times, serif;
-		font-size: 125%;
-		font-weight: 600;
-		display: block;
-		border: none;
-		background-color: #f8f8f8;	
+		font-size: 100%; 
+		font-weight: bold;
 	}
-
 	h1 {
 		font-size: 350%;
 		text-align: center;
@@ -124,10 +120,6 @@ my $css = '
 	.top a {
 		text-decoration: none;
 		color: #fff;
-	}
-
-	.top a:hover {
-		color: #c6c9c3;
 	}
 
 	.login {
@@ -213,7 +205,7 @@ sub oneWord {
 	my $pattern = makePattern($keyword);
 	my ($book, $page);
 	my $numResultPages;
-	print "<div class='row search-results col-md-offset-4 col-md-4'>"; # creates div for returning search results;
+	print "<div class='row search-results col-md-offset-3 col-md-6'>"; # creates div for returning search results;
 	for my $entry (split //, $text) {
 		if ($entry =~ s/tmp\/nybc(\d+).*\/(pg|nybc\d+_orig)_(\d+)//) {
 			($book, $page) = ($1, $3);
@@ -235,9 +227,9 @@ sub oneWord {
 				<a target='_blank'
                         href='https://archive.org/stream/nybc$book#page/n$page/mode/1up'>$books{$book},
                         pg. $page<\/a>
-				<button type='submit' class='btn btn-primary btn-xs'>edit</button>
+				<button type='submit' class='btn btn-primary btn-xs'>ויסרעדאַגירן</button>
 			</form>
-			<p><pre>$entry</pre></p></div><br/>\n"; # print an entry that is found
+			<p>$entry</p></div><br/>\n"; # print an entry that is found
 			$hits += 1;
 		} # a hit
 		

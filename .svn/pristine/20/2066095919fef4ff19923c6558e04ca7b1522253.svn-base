@@ -70,11 +70,11 @@
   $reasonText = $dom->createTextNode($reason);
   // Appends the text to the <Reason> tag.
   $newReason->appendChild($reasonText);
- 
+  
   $newPermisson = $dom->createElement('Permission');
   $permissionText = $dom->createTextNode('0');
   $newPermisson->appendChild($permissionText);
-// Appends all the previos to user so that it can be stored. 
+  
   $user = $dom->createElement("user");
   $user->appendChild($newEmail);
   $user->appendChild($newFirst);
@@ -82,42 +82,39 @@
   $user->appendChild($newPass);
   $user->appendChild($newReason);
   $user->appendChild($newPermisson);
-// now appeneds user to root which is <info>
   $root->appendChild($user);
-
-// save changes to the DOM file to the original.
+ 
+  
   $dom->save($file);
 
-// send a success mesage.
   echo '<h1> Thank You </h1> <br> <p>Your request has been sent. Dr. Finkle will contact you as soon as possible </p>';
 
   }
 
-// used to control what is displayed to the screen. 
   else
   {
 ?>
- 
-<!-- form to collect all the applicants information -->
+
+    
+        
  <form action = "registration.php" method="POST">
       <h1> Please enter your information and a (short) reason why you want to work on this project</h1>
         <p>
-         <!-- labels used to hold the users information and pass it using the submit button -->
           <label>First:</label><input type = "text"  name = "first" /><br>
           <label>Last:</label><input type = "text"  name = "last" /><br>
           <label>Email:</label><input type = "text"  name = "email" /><br>
           <label>Password:</label><input type = "password" name = "password" /> 
           <br/>
 	<br/>
-<!-- Text area for the applicant to enter why they should be allowed to edit the works of Sholem. -->
-    <textarea name="reason" cols="50" rows="5" placeholder="Enter reason here..."></textarea>
+    <textarea name="reason" cols="50" rows="5">
+Enter reason here...
+    </textarea>
     <br />
 
 
 
           <br/>
         </p>
-<!-- Submit button to send the information collected back to this page. It is caught in the above if statement.-->
       <input type = "submit" name="submit_btn" id = "submit" value = "submit"/>
     </form>
 <?php
